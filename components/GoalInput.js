@@ -1,34 +1,57 @@
-import {TextInput,Button,StyleSheet,View} from 'react-native'
+import {TextInput,Button,StyleSheet,View, Modal,Image} from 'react-native'
 import {useState} from 'react'
 function GoalInput(props){
     const [text,changeText] = useState('')
 
    function addGoal(){
-      props.addGoal(text)
+      props.onAddGoal(text)
       changeText('')
     }
   return (
-    <View style={styles.inputContainer}>
-    <TextInput placeholder='请输入'  style={styles.input} value={text} onChangeText={changeText}/>
-    <Button title="Asdd goal" onPress={addGoal}></Button>
-   </View>
+    <Modal visible={props.visible} animationType="slide">
+      <View style={styles.inputContainer}>
+          <Image style={styles.image} source={require('../assets/images/goal.png')}/>
+          <TextInput placeholder='请输入'  style={styles.input} value={text} onChangeText={changeText}/>
+          <View style={styles.buttonContainer}>
+            <Button  style={styles.button}  color='#a065ec' title="Add goal" onPress={addGoal}></Button>
+            <Button  style={styles.button}  color='#a065ec' title="Cancel" onPress={props.onCancel}></Button>
+          </View>
+      </View>
+     
+    </Modal>
+   
   )
 }
 export default GoalInput;
 const styles = StyleSheet.create({
     inputContainer:{
-        flexDirection:'row',
-        justifyContent:'space-around',
+        justifyContent:'center',
         alignItems:'center',
-        flex:1
+        paddingHorizontal:16,
+        flex:1,
+        backgroundColor:'#311b6b'
+      },
+      image:{
+        width:100,
+        height:100,
+        marginBottom:10
       },
       input:{
-        width:'70%',
+        width:'100%',
         marginRight:8,
         paddingVertical:8,
         borderWidth:1,
         borderColor:'#ccc',
         borderRadius:2,
-        paddingHorizontal:8
+        paddingHorizontal:8,
+        color:'#fff'
       },
+      buttonContainer:{
+        marginTop:16,
+        flexDirection:'row'
+      },
+      button:{
+        width:100,
+        marginHorizontal:18
+      }
 })
