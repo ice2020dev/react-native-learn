@@ -41,6 +41,8 @@ export default function App() {
     screen=<GameOver userNumber={userNumber} guessRound={guessRound} onStartGame={startGameHandler}/>
   }
   return (
+    <>
+    <StatusBar style="light"></StatusBar>
     <LinearGradient colors={[Colors.primary700,Colors.accent500]} style={
       styles.rootScreen
     }>
@@ -50,6 +52,8 @@ export default function App() {
         </SafeAreaView>  
       </ImageBackground>  
     </LinearGradient>
+    </>
+  
   );
 }
 

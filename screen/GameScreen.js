@@ -1,4 +1,4 @@
-import {View,Text,StyleSheet, Alert, FlatList} from 'react-native'
+import {View,Text,StyleSheet, Alert, FlatList,useWindowDimensions} from 'react-native'
 import { useEffect, useState } from 'react'
 import {Ionicons} from '@expo/vector-icons'
 import Title from '../components/ui/Title'
@@ -21,6 +21,7 @@ function GameScreen({userNumber,onGameOver}){
     const initialGuess = generateRamdomBetween(1,100,userNumber)
     const [currentGuess,setCurrentGuess] = useState(initialGuess)
     const [roundGuess,setRoundGuess] = useState([])
+    const {width,height} = useWindowDimensions()
 
     useEffect(()=>{
         if(currentGuess==userNumber){
@@ -52,27 +53,56 @@ function GameScreen({userNumber,onGameOver}){
         })
     }
     const guessRoundListLength = roundGuess.length
-    return (
-        <View style={styles.rootScreen}>
-            <Title>Opponents'Guess</Title>
-            <NumberContainer>{currentGuess}</NumberContainer>
-            <Card >
-                <InstructionText style={styles.instructionText}>Higher or Lower?</InstructionText>
-                <View style={styles.buttonsContainer}>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'lower')}>
-                            <Ionicons name="md-remove" size={24} color='white'/>
-                        </PrimaryButton>
-                    </View>
-                    <View style={styles.buttonContainer}>
-                        <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'greater')}>
-                          <Ionicons name="md-add" size={24} color='white'/>
-                        </PrimaryButton>
-                    </View>
-                    
+    // 纵向屏幕布局
+    let content = (
+    <>
+      <Title>Opponents'Guess</Title>
+      <NumberContainer>{currentGuess}</NumberContainer>
+      <Card >
+            <InstructionText style={styles.instructionText}>Higher or Lower?</InstructionText>
+            <View style={styles.buttonsContainer}>
+                <View style={styles.buttonContainer}>
+                    <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'lower')}>
+                        <Ionicons name="md-remove" size={24} color='white'/>
+                    </PrimaryButton>
+                </View>
+                <View style={styles.buttonContainer}>
+                    <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'greater')}>
+                        <Ionicons name="md-add" size={24} color='white'/>
+                    </PrimaryButton>
                 </View>
                 
-            </Card>
+            </View>
+                
+       </Card>
+    </>)
+    
+    // 横向屏幕时的组件
+    if(width>500){
+        content=(
+            <>
+             <View style={styles.landscapeContainer}>
+               <View style={styles.buttonContainer}>
+
+                    <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'lower')}>
+                        <Ionicons name="md-remove" size={24} color='white'/>
+                    </PrimaryButton>
+                </View>
+                <NumberContainer>{currentGuess}</NumberContainer>
+                <View style={styles.buttonContainer}>
+                    <PrimaryButton style={styles.buttonContainer} onPress={nextGuessHandler.bind(this,'greater')}>
+                        <Ionicons name="md-add" size={24} color='white'/>
+                    </PrimaryButton>
+                </View>
+                
+            </View>
+            </>
+        )
+    }
+    return (
+        <View style={styles.rootScreen}>
+            {/* <Title>Opponents'Guess</Title> */}
+            {content}
             <View style={styles.itemContainer}>
                 <FlatList
                 data={roundGuess}
@@ -88,7 +118,8 @@ export default  GameScreen
 const styles = StyleSheet.create({
     rootScreen:{
         flex:1,
-        padding:16
+        padding:16,
+        alignItems:'center'
     },
     instructionText:{
         marginBottom:12
@@ -102,5 +133,10 @@ const styles = StyleSheet.create({
      itemContainer:{
         flex:1,
         padding:16
+     },
+
+     // 横向屏幕样式
+     landscapeContainer:{
+        flexDirection:'row'
      }
 })
